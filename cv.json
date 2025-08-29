@@ -1,0 +1,96 @@
+{
+  "about": "Hi! I’m Sarthak Katiyar, a software developer and tech enthusiast. I’m currently pursuing my B.Tech in Computer Science and Business Systems at Vellore Institute of Technology (expected graduation: 2027).\n\nI love learning by building, whether that’s coding projects, experimenting with new tools, or collaborating on ideas, these things excite me more than just books and lectures. I’m comfortable working both independently and in a team, though I prefer roles that offer a bit of both.\n\nAt the moment, I’m looking for internships and part-time remote opportunities that not only let me apply my skills but also give me an environment to keep growing as a developer and as a person. I’m especially drawn to opportunities where I can take ownership of my work, experiment, and learn along the way.",
+  
+  "education": {
+    "institution": "Vellore Institute of Technology, Andhra Pradesh (VIT-AP)",
+    "degree": "Bachelor of Technology (B.Tech) in Computer Science and Business Systems",
+    "duration": "2023 – 2027 (Expected)"
+  },
+
+  "experience": [
+    {
+      "organization": "Machine Learning Club, VIT-AP",
+      "roles": [
+        {
+          "title": "Member — Natural Language Processing (NLP) Team",
+          "duration": "Jul 2024 – Jun 2025",
+          "details": [
+            "Worked in a research-focused team to test and evaluate various NLP models (LLaMA, Mistral, OpenAI, Gemini) on sarcasm detection."
+          ]
+        },
+        {
+          "title": "Member — Projects Team",
+          "duration": "Oct 2023 – Jun 2024",
+          "details": [
+            "Contributed as a technical member to the club website, including designing the Contact Us page.",
+            "Designed and presented two mini-game projects at the annual tech fest arcade stall."
+          ]
+        }
+      ]
+    },
+    {
+      "organization": "Milestone Club, VIT-AP",
+      "roles": [
+        {
+          "title": "Member — Projects Team",
+          "duration": "Dec 2024 – Jun 2025",
+          "details": [
+            "Built a shell-based Python interpreter in C, applying concepts from Data Structures & Algorithms and Operating Systems coursework."
+          ]
+        }
+      ]
+    },
+    {
+      "organization": "Global Nomads Group",
+      "roles": [
+        {
+          "title": "Student to World Intern",
+          "duration": "Nov 2024 – Jan 2025",
+          "details": [
+            "Collaborated with international youth and experts to research cultural integration and human rights.",
+            "Contributed to designing accessible and interactive learning modules."
+          ]
+        }
+      ]
+    },
+    {
+      "organization": "IIT Bombay E-Cell",
+      "roles": [
+        {
+          "title": "Campus Ambassador",
+          "duration": "Jul 2024 – Dec 2024",
+          "details": [
+            "Promoted entrepreneurship programs on campus.",
+            "Supported the National Entrepreneurship Challenge (NEC 2024), helping VIT-AP secure a top 50 position."
+          ]
+        }
+      ]
+    },
+    {
+      "organization": "GeeksForGeeks Student Chapter, VIT-AP",
+      "roles": [
+        {
+          "title": "Research Team Lead",
+          "duration": "Oct 2023 – Jul 2024",
+          "details": [
+            "Led a research team, organizing study sessions and guiding peers in advanced algorithms, coding practices, and competitive programming."
+          ]
+        }
+      ]
+    }
+  ],
+
+  "projects": [
+    "Shell Based Python Interpreter using C",
+    "Brick Breaker Game using PyGames",
+    "Typing Test Game using HTML, CSS, and Javascript",
+    "Shell Based Wordle using Python"
+  ],
+
+  "certificates_and_awards": [
+    "R Essentials, IBM",
+    "Programming Fundamentals, Kaggle",
+    "Python Programming, Code in Place by Stanford University"
+  ]
+}
+
