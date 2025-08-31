@@ -110,7 +110,7 @@ fetch("cv.json")
 
 /* Contact form: send to Google Apps Script */
 const ACTION_URL = "https://script.google.com/macros/s/AKfycbwryMCuMf0WMJVJEoLfLCDzKevLnrDPzZhONJdBHGaB01AafwSzlHHfzOe3aJmWCx03/exec"; // GAS Web App /exec URL
-const SECRET_TOKEN = ""; // if you set SECRET_TOKEN in GAS properties, put the same value here
+const SECRET_TOKEN = "#89cjyl2r_lexiisawesome-noiofficialtwt.0207"; // if you set SECRET_TOKEN in GAS properties, put the same value here
 
 const form = document.getElementById("contact-form");
 const statusEl = document.getElementById("form-status");
