@@ -3,6 +3,7 @@ const header = document.getElementById('header');
 const hero = document.getElementById('hero');
 
 window.addEventListener('scroll', () => {
+  if (!header || !hero) return;
   if (window.scrollY > hero.offsetHeight - 80) {
     header.classList.add('show');
   } else {
@@ -11,93 +12,105 @@ window.addEventListener('scroll', () => {
 });
 
 /* Load JSON content */
-fetch("cv.json")   
+fetch("cv.json")
   .then(res => {
     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
     return res.json();
   })
   .then(data => {
     // About
-    document.getElementById("about-content").textContent = data.about;
+    const aboutEl = document.getElementById("about-content");
+    if (aboutEl) aboutEl.textContent = data.about;
 
     // Education
     const eduDiv = document.getElementById("education-content");
-    eduDiv.innerHTML = `
-      <p>
-        <strong>${data.education.institution}</strong><br>
-        ${data.education.degree}<br>
-        ${data.education.duration}
-      </p>
-    `;
+    if (eduDiv) {
+      eduDiv.innerHTML = `
+        <p>
+          <strong>${data.education.institution}</strong><br>
+          ${data.education.degree}<br>
+          ${data.education.duration}
+        </p>
+      `;
+    }
 
     // Experience Timeline (group roles under the same organization)
     const expDiv = document.getElementById("experience-timeline");
-    data.experience.forEach(exp => {
-      const item = document.createElement("div");
-      item.classList.add("timeline-item");
+    if (expDiv && Array.isArray(data.experience)) {
+      data.experience.forEach(exp => {
+        const item = document.createElement("div");
+        item.classList.add("timeline-item");
 
-      const dot = document.createElement("div");
-      dot.className = "timeline-dot";
+        const dot = document.createElement("div");
+        dot.className = "timeline-dot";
 
-      const content = document.createElement("div");
-      content.className = "timeline-content";
+        const content = document.createElement("div");
+        content.className = "timeline-content";
 
-      // Organization heading once
-      const orgEl = document.createElement("strong");
-      orgEl.textContent = exp.organization;
+        // Organization heading once
+        const orgEl = document.createElement("strong");
+        orgEl.textContent = exp.organization;
 
-      // Roles list under the organization
-      const rolesList = document.createElement("ul");
-      rolesList.className = "roles";
+        // Roles list under the organization
+        const rolesList = document.createElement("ul");
+        rolesList.className = "roles";
 
-      exp.roles.forEach(role => {
-        const li = document.createElement("li");
-        li.className = "role";
-        li.innerHTML = `
-          <div class="role-title">${role.title}</div>
-          <span class="date">${role.duration}</span>
-          <p>${role.details.join("<br>")}</p>
-        `;
-        rolesList.appendChild(li);
+        (exp.roles || []).forEach(role => {
+          const li = document.createElement("li");
+          li.className = "role";
+          const detailsHtml = Array.isArray(role.details) ? role.details.join("<br>") : "";
+          li.innerHTML = `
+            <div class="role-title">${role.title}</div>
+            <span class="date">${role.duration}</span>
+            <p>${detailsHtml}</p>
+          `;
+          rolesList.appendChild(li);
+        });
+
+        content.appendChild(orgEl);
+        content.appendChild(rolesList);
+        item.appendChild(dot);
+        item.appendChild(content);
+        expDiv.appendChild(item);
       });
-
-      content.appendChild(orgEl);
-      content.appendChild(rolesList);
-      item.appendChild(dot);
-      item.appendChild(content);
-      expDiv.appendChild(item);
-    });
+    }
 
     // Projects
     const projList = document.getElementById("projects-list");
-    data.projects.forEach(proj => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <strong>${proj.title}</strong><br>
-        <p>${proj.description}</p>
-        <div class="tags">
-          ${proj.skills.map(skill => `<span class="tag">${skill}</span>`).join(" ")}
-        </div>
-      `;
-      projList.appendChild(li);
-    });
+    if (projList && Array.isArray(data.projects)) {
+      data.projects.forEach(proj => {
+        const li = document.createElement("li");
+        const skills = Array.isArray(proj.skills) ? proj.skills : [];
+        li.innerHTML = `
+          <strong>${proj.title}</strong><br>
+          <p>${proj.description}</p>
+          <div class="tags">
+            ${skills.map(skill => `<span class="tag">${skill}</span>`).join(" ")}
+          </div>
+        `;
+        projList.appendChild(li);
+      });
+    }
 
     // Certificates
     const certList = document.getElementById("certificates-list");
-    data.certificates_and_awards.forEach(cert => {
-      const li = document.createElement("li");
-      li.textContent = cert;
-      certList.appendChild(li);
-    });
+    if (certList && Array.isArray(data.certificates_and_awards)) {
+      data.certificates_and_awards.forEach(cert => {
+        const li = document.createElement("li");
+        li.textContent = cert;
+        certList.appendChild(li);
+      });
+    }
   })
   .catch(err => {
     console.error("Error loading cv.json:", err);
-    document.getElementById("about-content").textContent = "⚠️ Could not load content.";
+    const aboutEl = document.getElementById("about-content");
+    if (aboutEl) aboutEl.textContent = "⚠️ Could not load content.";
   });
 
 /* Contact form: send to Google Apps Script */
 const ACTION_URL = "https://script.google.com/macros/s/AKfycbwryMCuMf0WMJVJEoLfLCDzKevLnrDPzZhONJdBHGaB01AafwSzlHHfzOe3aJmWCx03/exec"; // your Web App URL
-const SECRET_TOKEN = ""; // if you later set SECRET_TOKEN in GAS properties, put the same value here
+const SECRET_TOKEN = ""; // if you set SECRET_TOKEN in GAS properties, put the same value here
 
 const form = document.getElementById("contact-form");
 const statusEl = document.getElementById("form-status");
@@ -106,24 +119,26 @@ const sendBtn = document.getElementById("send-btn");
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    statusEl.textContent = "";
+    if (statusEl) statusEl.textContent = "";
 
     // Native validation
     if (!form.reportValidity()) return;
 
     const payload = {
-      firstName: document.getElementById("firstName").value.trim(),
-      lastName: document.getElementById("lastName").value.trim(),
-      email: document.getElementById("email").value.trim(),
-      organization: document.getElementById("organization").value.trim(),
-      message: document.getElementById("message").value.trim(),
-      website: document.getElementById("website").value.trim(), // honeypot
+      firstName: (document.getElementById("firstName")?.value || "").trim(),
+      lastName: (document.getElementById("lastName")?.value || "").trim(),
+      email: (document.getElementById("email")?.value || "").trim(),
+      organization: (document.getElementById("organization")?.value || "").trim(),
+      message: (document.getElementById("message")?.value || "").trim(),
+      website: (document.getElementById("website")?.value || "").trim(), // honeypot
       token: SECRET_TOKEN
     };
 
-    sendBtn.disabled = true;
-    const originalLabel = sendBtn.textContent;
-    sendBtn.textContent = "Sending…";
+    if (sendBtn) {
+      sendBtn.disabled = true;
+      sendBtn.dataset.label = sendBtn.textContent || "Send";
+      sendBtn.textContent = "Sending…";
+    }
 
     try {
       const res = await fetch(ACTION_URL, {
@@ -136,18 +151,20 @@ if (form) {
       try { data = await res.json(); } catch (_e) {}
 
       if (res.ok && (!data.ok || data.ok === true)) {
-        statusEl.textContent = "Thanks! Your message has been sent.";
+        if (statusEl) statusEl.textContent = "Thanks! Your message has been sent.";
         form.reset();
       } else {
         const msg = (data && (data.error || data.message)) || "Sorry, something went wrong.";
-        statusEl.textContent = msg + " You can also email me at katiyarsarthak2004@gmail.com.";
+        if (statusEl) statusEl.textContent = msg + " You can also email me at katiyarsarthak2004@gmail.com.";
       }
     } catch (err) {
       console.error("Send failed:", err);
-      statusEl.textContent = "Network error. Please try again, or email me at katiyarsarthak2004@gmail.com.";
+      if (statusEl) statusEl.textContent = "Network error. Please try again, or email me at katiyarsarthak2004@gmail.com.";
     } finally {
-      sendBtn.disabled = false;
-      sendBtn.textContent = originalLabel;
+      if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.textContent = sendBtn.dataset.label || "Send";
+      }
     }
   });
 }
