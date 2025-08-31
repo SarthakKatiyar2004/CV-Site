@@ -88,13 +88,11 @@ header.show { transform: translateY(0); }
 
 /* SECTIONS */
 section {
-  /* allow sections to grow with content */
   padding: 6rem 5%;
   font-size: 22px;
   line-height: 1.6;
 }
 
-/* Alternate section backgrounds */
 section:nth-of-type(1) { background: #FFFFFF; }
 section:nth-of-type(2) { background: #FBF2ED; }
 section:nth-of-type(3) { background: #FFFFFF; }
@@ -104,8 +102,6 @@ section:nth-of-type(5) { background: #FFFFFF; }
 /* ===================== */
 /* Education/Experience  */
 /* ===================== */
-
-/* subtle separator between education and experience */
 .separator {
   border-top: 1px solid rgba(0,0,0,0.2);
   margin: 2.5rem 0;
@@ -114,40 +110,38 @@ section:nth-of-type(5) { background: #FFFFFF; }
 /* vertical timeline */
 .timeline {
   position: relative;
-  margin-left: 1.5rem;   /* space before the line */
-  padding-left: 1.25rem; /* space for content */
+  margin-left: 2rem;   /* more space before line */
+  padding-left: 2rem;  /* more space for content */
 }
 
 .timeline::before {
   content: "";
   position: absolute;
-  left: 0;
+  left: 0.5rem;
   top: 0; bottom: 0;
   width: 2px;
-  background: #B7BCBF;  /* timeline line */
+  background: #B7BCBF;
   opacity: 0.9;
 }
 
 .timeline-item {
   position: relative;
   margin-bottom: 2rem;
+  padding-left: 1rem; /* extra spacing so text never overlaps dot */
 }
-
-.timeline-item:last-child { margin-bottom: 0; }
 
 .timeline-dot {
   position: absolute;
-  left: -0.55rem; /* centers dot on the line */
-  top: 0.45rem;
-  width: 12px; height: 12px;
-  background: #BB947E;        /* accent dot */
+  left: -0.15rem; /* fixed alignment with line */
+  top: 0.6rem;
+  width: 14px; height: 14px;
+  background: #BB947E;
   border-radius: 50%;
-  border: 2px solid #fff;      /* inner ring */
-  box-shadow: 0 0 0 2px #B7BCBF; /* outer ring to match line */
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #B7BCBF;
 }
 
 .timeline-content { font-size: 20px; line-height: 1.6; }
-
 .timeline-content .date {
   font-size: 0.95rem;
   color: #666;
@@ -155,60 +149,84 @@ section:nth-of-type(5) { background: #FFFFFF; }
   margin: 0.25rem 0 0.5rem;
 }
 
+/* ===================== */
+/* Projects & Certificates */
+/* ===================== */
+
+/* remove plain bullets, use custom marker */
+#projects-list li,
+#certificates-list li {
+  list-style: none;
+  margin-bottom: 1rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+#projects-list li::before,
+#certificates-list li::before {
+  content: "◆"; /* diamond bullet */
+  position: absolute;
+  left: 0;
+  color: #BB947E;
+  font-size: 0.8rem;
+  top: 0.4rem;
+}
+
+/* tags for project skills */
+.tags {
+  margin-top: 0.5rem;
+}
+.tag {
+  display: inline-block;
+  background: #BB947E;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  margin: 0.2rem 0.3rem 0 0;
+}
+
 /* ------------------- */
 /* RESPONSIVE QUERIES */
 /* ------------------- */
-
-/* Large tablets & small laptops (<=1200px) */
 @media (max-width: 1200px) {
   .intro h1 { font-size: 64px; }
   .intro h2 { font-size: 48px; }
   .hero nav { font-size: 1.8rem; }
 }
 
-/* Tablets (<=992px) */
 @media (max-width: 992px) {
   .intro h1 { font-size: 52px; }
   .intro h2 { font-size: 40px; }
   .hero nav { right: 2rem; gap: 1.5rem; font-size: 1.6rem; }
 }
 
-/* Small tablets & large phones (<=768px) */
 @media (max-width: 768px) {
   .hero { align-items: flex-start; padding: 3rem 2rem; }
   .intro h1 { font-size: 42px; }
   .intro h2 { font-size: 28px; }
-
   .hero nav {
-    position: static;   /* drop below hero text */
+    position: static;
     margin-top: 2rem;
     flex-direction: column;
     align-items: flex-start;
     font-size: 1.4rem;
     gap: 1rem;
   }
-
   section { padding: 4rem 2rem; font-size: 20px; }
-
-  /* tighter timeline on small screens */
-  .timeline { margin-left: 1rem; padding-left: 1rem; }
-  .timeline-dot { left: -0.6rem; width: 10px; height: 10px; }
+  .timeline { margin-left: 1rem; padding-left: 1.5rem; }
+  .timeline-dot { left: -0.2rem; width: 12px; height: 12px; }
 }
 
-/* Phones (<=576px) */
 @media (max-width: 576px) {
   .intro h1 { font-size: 32px; }
   .intro h2 { font-size: 22px; }
-
   .hero { align-items: center; text-align: center; }
   .hero nav { align-items: center; text-align: center; font-size: 1.2rem; }
-
   section { padding: 3rem 1.5rem; font-size: 18px; }
-
-  .timeline { margin-left: 0.75rem; padding-left: 0.9rem; }
+  .timeline { margin-left: 0.75rem; padding-left: 1.25rem; }
 }
 
-/* Extra small phones (<=375px) */
 @media (max-width: 375px) {
   .intro h1 { font-size: 28px; }
   .intro h2 { font-size: 20px; }
