@@ -1,3 +1,4 @@
+/* Header show/hide on scroll */
 const header = document.getElementById('header');
 const hero = document.getElementById('hero');
 
@@ -9,7 +10,8 @@ window.addEventListener('scroll', () => {
   }
 });
 
-fetch("cv.json")
+/* Load JSON content */
+fetch("cv.json")   
   .then(res => {
     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
     return res.json();
@@ -92,3 +94,60 @@ fetch("cv.json")
     console.error("Error loading cv.json:", err);
     document.getElementById("about-content").textContent = "⚠️ Could not load content.";
   });
+
+/* Contact form: send to Google Apps Script */
+const ACTION_URL = "https://script.google.com/macros/s/AKfycbwryMCuMf0WMJVJEoLfLCDzKevLnrDPzZhONJdBHGaB01AafwSzlHHfzOe3aJmWCx03/exec"; // your Web App URL
+const SECRET_TOKEN = ""; // if you later set SECRET_TOKEN in GAS properties, put the same value here
+
+const form = document.getElementById("contact-form");
+const statusEl = document.getElementById("form-status");
+const sendBtn = document.getElementById("send-btn");
+
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusEl.textContent = "";
+
+    // Native validation
+    if (!form.reportValidity()) return;
+
+    const payload = {
+      firstName: document.getElementById("firstName").value.trim(),
+      lastName: document.getElementById("lastName").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      organization: document.getElementById("organization").value.trim(),
+      message: document.getElementById("message").value.trim(),
+      website: document.getElementById("website").value.trim(), // honeypot
+      token: SECRET_TOKEN
+    };
+
+    sendBtn.disabled = true;
+    const originalLabel = sendBtn.textContent;
+    sendBtn.textContent = "Sending…";
+
+    try {
+      const res = await fetch(ACTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      let data = {};
+      try { data = await res.json(); } catch (_e) {}
+
+      if (res.ok && (!data.ok || data.ok === true)) {
+        statusEl.textContent = "Thanks! Your message has been sent.";
+        form.reset();
+      } else {
+        const msg = (data && (data.error || data.message)) || "Sorry, something went wrong.";
+        statusEl.textContent = msg + " You can also email me at katiyarsarthak2004@gmail.com.";
+      }
+    } catch (err) {
+      console.error("Send failed:", err);
+      statusEl.textContent = "Network error. Please try again, or email me at katiyarsarthak2004@gmail.com.";
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.textContent = originalLabel;
+    }
+  });
+}
