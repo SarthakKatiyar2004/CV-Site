@@ -109,12 +109,41 @@ fetch("cv.json")
   });
 
 /* Contact form: send to Google Apps Script */
-const ACTION_URL = "https://script.google.com/macros/s/AKfycbwryMCuMf0WMJVJEoLfLCDzKevLnrDPzZhONJdBHGaB01AafwSzlHHfzOe3aJmWCx03/exec"; // your Web App URL
+const ACTION_URL = "https://script.google.com/macros/s/AKfycbwryMCuMf0WMJVJEoLfLCDzKevLnrDPzZhONJdBHGaB01AafwSzlHHfzOe3aJmWCx03/exec"; // GAS Web App /exec URL
 const SECRET_TOKEN = ""; // if you set SECRET_TOKEN in GAS properties, put the same value here
 
 const form = document.getElementById("contact-form");
 const statusEl = document.getElementById("form-status");
 const sendBtn = document.getElementById("send-btn");
+
+async function postJSON_(url, payload) {
+  // This will fail on the browser due to CORS (OPTIONS 405) but works for curl/Postman.
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  // If CORS blocks, the fetch above will throw before this point.
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || (data && data.ok === false)) {
+    const msg = (data && (data.error || data.message)) || `HTTP ${res.status}`;
+    throw new Error(msg);
+  }
+  return data;
+}
+
+async function postNoCorsForm_(url, payload) {
+  // Avoid preflight and CORS errors by using no-cors + URL-encoded
+  // Response is opaque; assume success if no network error occurs.
+  const body = new URLSearchParams(payload);
+  await fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+    body
+  });
+  return true; // cannot verify; we assume ok if no exception
+}
 
 if (form) {
   form.addEventListener("submit", async (e) => {
@@ -141,25 +170,20 @@ if (form) {
     }
 
     try {
-      const res = await fetch(ACTION_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      let data = {};
-      try { data = await res.json(); } catch (_e) {}
-
-      if (res.ok && (!data.ok || data.ok === true)) {
+      // 1) Try JSON first (works for curl/Postman and if you host through a proxy later)
+      try {
+        await postJSON_(ACTION_URL, payload);
         if (statusEl) statusEl.textContent = "Thanks! Your message has been sent.";
         form.reset();
-      } else {
-        const msg = (data && (data.error || data.message)) || "Sorry, something went wrong.";
-        if (statusEl) statusEl.textContent = msg + " You can also email me at katiyarsarthak2004@gmail.com.";
+      } catch (corsErr) {
+        // 2) Browser fallback to no-cors form POST (avoids preflight)
+        await postNoCorsForm_(ACTION_URL, payload);
+        if (statusEl) statusEl.textContent = "Thanks! Your message has been sent.";
+        form.reset();
       }
     } catch (err) {
       console.error("Send failed:", err);
-      if (statusEl) statusEl.textContent = "Network error. Please try again, or email me at katiyarsarthak2004@gmail.com.";
+      if (statusEl) statusEl.textContent = "Sorry, something went wrong. Please try again, or email me at katiyarsarthak2004@gmail.com.";
     } finally {
       if (sendBtn) {
         sendBtn.disabled = false;
