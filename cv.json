@@ -81,10 +81,26 @@
   ],
 
   "projects": [
-    "Shell Based Python Interpreter using C",
-    "Brick Breaker Game using PyGames",
-    "Typing Test Game using HTML, CSS, and Javascript",
-    "Shell Based Wordle using Python"
+  {
+    "title": "Terminal-based Python Interpreter using C",
+    "description": "A minimal Python interpreter built in C, simulating execution of basic Python commands in a terminal-like interface.",
+    "skills": ["C", "Data Structures & Algorithms", "Operating Systems", "Interpreter Design"]
+  },
+  {
+    "title": "Brick Breaker Game using PyGames",
+    "description": "A classic arcade-style game where the player controls a paddle to bounce a ball and break bricks, built using PyGame.",
+    "skills": ["Python", "PyGame", "Game Loop Design", "Collision Detection"]
+  },
+  {
+    "title": "Typing Test Game using HTML, CSS, and Javascript",
+    "description": "A web-based typing speed test application that measures words per minute and accuracy while typing random sentences.",
+    "skills": ["HTML", "CSS", "JavaScript", "DOM Manipulation"]
+  },
+  {
+    "title": "Terminal-based Wordle using Python",
+    "description": "A terminal-based Wordle clone where the player guesses a five-letter word, with hints for correct and misplaced letters.",
+    "skills": ["Python", "Game Logic", "String Manipulation", "User Interaction (CLI)"]
+  }
   ],
 
   "certificates_and_awards": [
@@ -93,4 +109,3 @@
     "Python Programming, Code in Place by Stanford University"
   ]
 }
-
